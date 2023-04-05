@@ -1,6 +1,6 @@
 # B2CCacheAuth
 
- This sample displays the claims in the MainLayout when the user has logged in successfully. The authstate field is initialized in the OnAuthenticationStateChanged handler in the MainLayout.
+This sample displays the claims in the MainLayout when the user has logged in successfully. The authstate field is initialized in the OnAuthenticationStateChanged handler in the MainLayout.
 
 Please note the following observations:
 
