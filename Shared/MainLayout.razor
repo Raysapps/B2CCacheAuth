@@ -1,0 +1,66 @@
+﻿@inherits LayoutComponentBase
+@inject AuthenticationStateProvider provider
+
+
+<div class="page">
+    <!--
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+    -->
+
+    <main>
+        <div class="top-row px-4 auth">
+            <LoginDisplay />
+            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+        </div>
+        <PageTitle>Display User Claims</PageTitle>
+        <h4>AuthenticationStateChanged Called: @AuthCallbackStatus</h4>
+        @if (authState?.User is not null)
+            @foreach (var claim in authState.User.Claims)
+            {
+                <p>@claim.Type: @claim.Value</p>
+            }
+
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+@code
+{
+    public string AuthCallbackStatus = "User is not Authenticated";
+    public AuthenticationState authState = default!;
+    protected override void OnInitialized()
+    {
+        // set handler to  AuthenticationStateChanged event. 
+        // OnAuthenticationStateChanged handler initalizes the variables 
+       //  * AuthCallbackStatus 
+        // * authState
+        provider.AuthenticationStateChanged += OnAuthenticationStateChanged;
+        base.OnInitialized();
+
+    }
+    public async void OnAuthenticationStateChanged(Task<AuthenticationState> task)
+    {
+        await InvokeAsync(async () =>
+        {
+            authState = await task;
+            if(authState.User?.Identity?.IsAuthenticated== true)
+            {
+                var name = authState.User.Identity.Name;
+                AuthCallbackStatus =  $"User is Authenticated {name}";
+            }
+            else
+            {
+                AuthCallbackStatus = "User is not Authenticated";
+            }
+        });
+        
+        //  await Task.CompletedTask;
+
+    }
+
+}
